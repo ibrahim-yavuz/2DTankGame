@@ -54,8 +54,10 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\User.cs" />
      <Compile Include="Assets\Scripts\SocketClient.cs" />
+     <Compile Include="Assets\Scripts\UIController.cs" />
      <Compile Include="Assets\Scripts\UDPClient.cs" />
      <Compile Include="Assets\Scripts\TankMovement.cs" />
+     <Compile Include="Assets\Scripts\Models\PlayerInfo.cs" />
      <None Include="Assets\TankEnvironment\license.txt" />
      <None Include="Assets\TankEnvironment\Spritesheet\sheet_tanks.xml" />
  <Reference Include="UnityEngine">

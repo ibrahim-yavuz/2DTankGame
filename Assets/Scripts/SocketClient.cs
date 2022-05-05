@@ -2,18 +2,24 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using UnityEngine;
+
+public struct UdpState
+{
+    public UdpClient u;
+    public IPEndPoint e;
+}
 
 public class SocketClient
 {
     public UdpClient client;
     private int _sendPort;
+    public string receivedData;
 
     public SocketClient()
     {
         try
         {
-            client = new UdpClient(65431);
+            client = new UdpClient(65434);
         }
         catch (SocketException e)
         {
@@ -28,6 +34,7 @@ public class SocketClient
         try
         {
             client?.Connect(hostName, port);
+            SendData("connected");
         }
         catch (SocketException e)
         {
@@ -43,11 +50,12 @@ public class SocketClient
             if (client != null)
             {
                 IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, _sendPort);
+                UdpState state = new UdpState();
 
-                var receiveBytes = client.Receive(ref remoteEndPoint);
-                var receivedString = Encoding.ASCII.GetString(receiveBytes);
+                state.e = remoteEndPoint;
+                state.u = client;
 
-                return receivedString;
+                client.BeginReceive(new AsyncCallback(ReceiveCallback), state);
             }
             return "NoData";
 
@@ -59,7 +67,7 @@ public class SocketClient
         }
     }
 
-    public async void SendData(string data)
+    public void SendData(string data)
     {
         try
         {
@@ -74,5 +82,14 @@ public class SocketClient
             throw;
         }
     }
-}
 
+    public void ReceiveCallback(IAsyncResult ar)
+    {
+        UdpClient u = ((UdpState)(ar.AsyncState)).u;
+        IPEndPoint e = ((UdpState)(ar.AsyncState)).e;
+
+        byte[] receivedBytes = u.EndReceive(ar, ref e);
+        string receiveString = Encoding.ASCII.GetString(receivedBytes);
+        receivedData = receiveString;
+    }
+}
