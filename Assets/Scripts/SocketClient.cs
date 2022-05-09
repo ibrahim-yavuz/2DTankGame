@@ -13,13 +13,13 @@ public class SocketClient
 {
     public UdpClient client;
     private int _sendPort;
-    public string receivedData;
+    public string receivedData = "";
 
     public SocketClient()
     {
         try
         {
-            client = new UdpClient(65434);
+            client = new UdpClient(Constants.PORT);
         }
         catch (SocketException e)
         {
@@ -34,7 +34,6 @@ public class SocketClient
         try
         {
             client?.Connect(hostName, port);
-            SendData("connected");
         }
         catch (SocketException e)
         {

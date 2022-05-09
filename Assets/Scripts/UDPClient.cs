@@ -1,13 +1,19 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UDPClient : MonoBehaviour
 {
-    public SocketClient socketClient;
-    public User user = new User("ibrahim");
+    public GameObject enemyTankPrefab;
+    public static List<GameObject> enemyTanks = new List<GameObject>();
 
     void Start()
     {
-        socketClient = new SocketClient();
-        socketClient.Connect("192.168.1.108", 65413);
+        Debug.Log(LobbyController.users.Count);
+        for (var i = 0; i < LobbyController.users.Count; i++)
+        {
+            var enemyTank = Instantiate(enemyTankPrefab, Vector3.zero, Quaternion.identity);
+            enemyTanks.Add(enemyTank);
+        }
     }
 }
